@@ -31,3 +31,6 @@ The built-in Sites skill was applied to private site creation, source packaging 
 
 ## Runtime primary source
 [Node.js v24 SQLite API](https://nodejs.org/docs/latest-v24.x/api/sqlite.html) — built-in DatabaseSync, transactions and SQLite backup mechanisms. Runtime verified locally with Node 24.19.0.
+
+## Supplied design reference
+User supplied odoo-20.0.zip: inspected Community primary_variables.scss, navbar.variables.scss, navbar.scss and views/list/list_renderer.scss locally. Original PrintFlow presentation follows their palette and ERP layout patterns; no Odoo installation or business dependency.

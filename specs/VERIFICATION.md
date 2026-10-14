@@ -22,3 +22,7 @@ Actual shop rates, inventory, process criteria, arbitrary materials/UOMs, machin
 | Third-party authoring skill global installation | Not performed; pinned source instructions used |
 
 Fixture credentials exist only in test source and the separate fixture database. Runtime data, test databases and secrets are excluded from source delivery.
+
+
+## Visual refresh v2.1
+Inspected Odoo 20 Community archive styles. Checked new theme locally in browser: dashboard, app launcher navigation to production, retained Thai labels and demo backup. No business state or backend logic changed. Theme script passes Node syntax check.

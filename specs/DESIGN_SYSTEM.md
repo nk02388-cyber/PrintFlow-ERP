@@ -1,4 +1,4 @@
-# PrintFlow design system / v2.0
+# PrintFlow design system / v2.1
 
 ## 1. Overview
 Thai operational workspace for reviewing carton and sheet sticker jobs and paper availability. The main screen prioritizes due dates, missing approvals and low materials. [PRD.md](PRD.md) defines scope and [ARCHITECTURE.md](ARCHITECTURE.md) defines data boundaries. This document records the current pilot rather than unimplemented components.
@@ -9,7 +9,7 @@ Use cards for a job stage and summary indicators; use tables for stock and compa
 ## 3. Anatomy
 ```mermaid
 flowchart TD
-  Shell[Workspace shell] --> Sidebar[Brand workspace navigation]
+  Shell[Workspace shell] --> Sidebar[Purple top navbar and application launcher]
   Shell --> Header[Page context and current Thai date]
   Shell --> Demo[Persistent prototype notice]
   Shell --> Main[Page heading and action]
@@ -23,7 +23,7 @@ flowchart TD
 Job identity, product, quantity, due date and stage are required. Detailed specifications live in the dialog. Input limits: customer/product 120 characters; dimensions/die/colours 80; finishing/revision 120. Numeric fields have business minimums and margin is less than 100%.
 
 ## 4. Variants
-Primary button: teal for a commit or next action. Ghost button: white bordered for secondary actions. Badge variants: green ready, amber waiting/attention, blue in progress, red overdue. State always includes text, not colour alone. Empty table states explain how to start. No animated KPI counters or fabricated progress values.
+Primary button: purple for a commit or next action. Ghost button: white bordered for secondary actions. Badge variants: green ready, amber waiting/attention, blue in progress, red overdue. State always includes text, not colour alone. Empty table states explain how to start. No animated KPI counters or fabricated progress values.
 
 ## 5. States
 | Component | States |
@@ -44,15 +44,15 @@ Connected mode shows setup/login before business data, pending writes, server er
 ## 6. Design tokens used
 | Token | Value | Role |
 |---|---|---|
-| --ink | #173137 | Main headings and body |
-| --muted | #586d72 | Secondary content, final override |
-| --line | #e1e8e7 | Borders and separators |
-| --teal | #087e73 | Primary actions and current nav |
-| --mint | #e2f4ee | Active/ready background |
-| --bg | #f5f7f6 | Workspace background |
-| --orange | #bd7431 | Attention icons |
+| --ink | #212529 | Main headings and body |
+| --muted | #59616a | Secondary content, final override |
+| --line | #dee2e6 | Borders and separators |
+| --teal | #71639e | Primary actions and current nav |
+| --mint | #eeebf4 | Active/ready background |
+| --bg | #f8f9fa | Workspace background |
+| --orange | #9a6b01 | Attention icons |
 
-Current geometry uses CSS literals: sidebar 240px / 205px, main gutter 34px / 25px / 16px, card radius 10px, button radius 7px, grid gap 20px. These are observed values, not claims that a full token library exists. Typography: IBM Plex Sans Thai via Google Fonts with system fallback; body 14px, page heading 29px, table 12px. Main breakpoints 1150px and 760px. CSS final rules supply focus, muted colour and touch sizing.
+Current geometry: top navigation 52px; page gutters 24px / 20px / 16px; cards/buttons 3px radius; dialogs 4px radius; grid gap 16px. Typography: IBM Plex Sans Thai with Segoe UI/system fallback, body 14px, page heading 24px, tables 12px. Breakpoints 1150px and 760px. The application launcher exposes all areas when the horizontal menu overflows; backup remains available in the context header in demo mode. Purple theme overrides live in docs/odoo-theme.css; the launcher is in docs/odoo-theme.js.
 
 ## 7. Usage examples
 Correct: “พร้อมใช้ 1,600 แผ่น” is distinct from stock and reservation. Correct: “ยังไม่บันทึก” for missing actual cost. Correct: a button says “เริ่มพิมพ์ / เบิกกระดาษ” when it also changes inventory.
@@ -66,4 +66,7 @@ Thai document lang, explicit label/input association, nav aria-current and toast
 Job detail shares states with board cards; calculator summary shares monetary formatting with cost tables; inventory table shares available-stock calculations with reservation actions. [AGENTS.md](AGENTS.md) lists entry points; [SOURCES.md](SOURCES.md) records the design-system-doc skill provenance.
 
 ## 10. Changelog
-v2.0 / 2026-10-14 / Codex: Thai packaging workspace, prototype banner, calculator, job stages, material table, cost comparison and keyboard/touch rules.
+v2.1 / 2026-10-14 / Codex: Thai packaging workspace, prototype banner, calculator, job stages, material table, cost comparison and keyboard/touch rules.
+
+
+v2.1 / 2026-10-14: visual reference inspected directly in user-supplied odoo-20.0.zip, addons/web/static/src/scss/primary_variables.scss and webclient/navbar/navbar.variables.scss. Community primary #71639e, 14px base font, white views, grey borders, top navigation. New original odoo-theme.css overrides prior geometry: 52px top bar, 24/20/16px page gutters, 3px cards/buttons, 4px dialog; accessible launcher, responsive horizontal menus, compact list and Kanban views. Brand and runtime remain PrintFlow. No Odoo code, assets or backend were transplanted.
