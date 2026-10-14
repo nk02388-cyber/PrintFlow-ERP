@@ -1,11 +1,12 @@
 # Open questions / owner: เจ้าของโรงพิมพ์
 
-- Folding cartons and sheet stickers are the current prototype baseline. Confirm whether corrugated conversion or flexible packaging is also required.
-- Confirm machine list, size limits, setup times, shift calendars, throughput and outsourcing rates.
-- Confirm customer/SKU list, material units and conversions, waste thresholds, approved price policy and tooling ownership.
-- Confirm the independent ERP implementation choice: custom backend or separately evaluated Odoo foundation.
-- Confirm the print shop inventory opening balances, material units and SKU master before importing real records.
-- Choose central database, role owners, backup/restore targets, accounting system and deployment audience for real users.
-- Confirm approval evidence, QC criteria, split deliveries and retention period.
-- Production cost registration must be itemized and linked to actual material/time consumption; the prototype accepts a manual total.
-- Browser-local concurrent editing across tabs is a known prototype limit. Storage change warnings help visibility but do not provide atomic multi-user transactions.
+Decision confirmed: independent PrintFlow, own backend, local Windows pilot at 127.0.0.1:8787.
+
+- Confirm carton types and whether roll stickers, corrugated or flexible packaging are required beyond folding cartons and sheet stickers.
+- Provide actual machine capacities, shift calendars, setup times and approved estimating rates.
+- Verify customer/SKU, tooling ownership, inventory opening balances and sheet units before real use.
+- Assign role owners; current roles limit writes but all authenticated users can read business and cost data.
+- Define QC acceptance criteria, rework, split deliveries and evidence retention.
+- Choose private backup location and rehearse restoration before relying on production data.
+- Decide later network access, HTTPS hosting and accounting integration. Local pilot is restricted to this computer.
+- BOM is planning only; outsourcing does not automate material transfers; lot/location accounting and automatic scheduling remain future work.

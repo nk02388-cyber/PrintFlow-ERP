@@ -4,3 +4,5 @@
 :focus-visible{outline:3px solid #087e73;outline-offset:3px}button{min-height:44px}button.small{min-height:36px}:root{--muted:#586d72}a:hover{text-decoration:underline}dialog .modal-head button{min-width:44px}
 @media(max-width:760px){button.small,nav a{min-height:44px}.toolbar input{flex:1}.toolbar select{max-width:100%}}
 :root{--muted:#586d72}
+
+aside{overflow-y:auto}nav a{padding-top:10px;padding-bottom:10px}.aside-bottom{padding-bottom:12px}.card-body form button{margin-top:16px}.table-wrap input{min-width:95px}

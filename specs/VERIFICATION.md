@@ -1,29 +1,24 @@
-# Verification / 14 October 2026
+# Verification: PrintFlow v0.2
 
-- Passed: 9 node tests covering price arithmetic, invalid inputs, stock reservation limits, proof gate, one-time consumption, QC gate, once-only receipt and backup validation.
-- Passed: JS syntax checks for app.js and core.js; local HTTP preview returns 200.
-- Passed: browser walkthrough created a 10,000-piece quote at 73,920 THB, converted it to a single job, retained it after reload, confirmed readiness after a rejected premature start, reserved 2,825 sheets and started printing with reservation cleared and consumption recorded.
-- Passed: dashboard screenshot reviewed at default desktop viewport and 390 × 844 mobile viewport. Mobile navigation and tables scroll by design.
-- Passed: agent index token estimate 990 / Good; reference links checked. Current primary/muted/action contrast verified numerically; full WCAG review not performed.
-- Not verified: actual business rates, machine scheduling, employee roles, central database concurrency, accounting and recovery guarantees. These features are not implemented.
-- Not fully walked through in browser: JSON replacement and CSV downloads. Backup structure rejection is covered by node tests; manual file round-trip remains a pilot check.
+14 October 2026. Test data only; real administrator account remains for the user to create.
 
-## agents-md-creator checkpoint
-| Check | Result |
+## Automated evidence
+17 Node tests: nine original carton/sticker/stock cases, six specialist pricing/approval/QC/cost cases, one multi-assertion central API test, and one SQLite backup reopen test. They cover authenticated reads, write roles, CSRF, version conflicts, idempotency, stock tampering rejection, fake evidence rejection, approval revision matching, full-quantity QC and rollback. The backup test reopens the downloaded SQLite file and verifies account/state/file-table integrity; it is not a production restore guarantee.
+
+## Browser evidence
+Separate fixture server at port 8788: logged in a fixture account, estimated a quote with plates and spot inks, saved it centrally, converted it to a job/order, uploaded fixture approval evidence to SQLite, approved the current revision, reserved 2,825 sheets and started production. Advanced stages to QC; the delivery action opened a QC form instead of shipping without results. Recorded four passing checks and 10,000 good / zero rejects. Recorded 2,850 actual sheets, 4 machine hours × 1,500 THB and 8 labour hours × 150 THB. Saved actual cost and delivered after QC. No real orders, employee credentials or approval evidence were used.
+
+## Boundaries
+Actual shop rates, inventory, process criteria, arbitrary materials/UOMs, machine capacity, lot/location operations and public deployment are not verified. Full financial read segregation and recovery/MFA are not implemented. Pilot remains local to loopback. Visual QA includes dialogs, role/login states and responsive inherited layouts; full WCAG certification is not claimed.
+
+## Skill checkpoints
+| Skill / requirement | Result |
 |---|---|
-| Concise index and core entry points | Passed: 33 lines, 990 estimated tokens |
-| Detailed rule/document references exist | Passed |
-| Setup and test commands scoped to static project | Passed |
-| Data and security boundaries explicit | Passed |
-| No dynamic progress or stale history in AGENTS | Passed |
-| Open questions next to AGENTS | Passed |
-| Existing user rules retained | Passed: carton/sticker focus and independent architecture |
-| Static candidates summed before split | Not applicable: no existing agent index split; existing standalone product/architecture/design docs reused |
-| Flat rules, no second-hop rule loading | Not applicable: no .agents/rules library created |
-| Monorepo prefix and CLAUDE sync | Not applicable: neither monorepo nor CLAUDE file |
-| Existing unsplit index preserved | Not applicable: new AGENTS file |
+| deliver-prd: problem, goals, unknown baselines, scope, stories, FR verification, contract and owners | Passed |
+| agents-md-creator: concise entry points, runnable commands, flat reference links and separate open questions | Passed |
+| agents-md-creator: existing file splitting approval | Not applicable: concise existing index; no split |
+| architecture analysis: actual code/data diagram, observed/unknown ledger, no copied outside implementation | Passed with bounded prototype-analysis scope |
+| design-system-doc: anatomy, variants, state, tokens, examples, accessibility limits and changelog | Passed / inherited tokens; additions documented |
+| Third-party authoring skill global installation | Not performed; pinned source instructions used |
 
-## Architecture analysis checkpoint
-Prototype code is observed, independent central ERP architecture is proposed, and unimplemented backend behavior is unknown. Diagram blocks use Mermaid. No implementation from another business system was copied. The scope is independent prototype boundary analysis, not a production security audit.
-
-Sheet sticker tests: 9,000 labels / 30 Ups / 5% waste / 20 setup sheets = 335 sheets and 10,582 THB estimated cost with fixture rates. Browser walkthrough confirmed substrate presets, 551 sheets for 10,000 labels with 200 setup sheets, quote save and conversion to a sticker job with Cutline. Existing browser material balances are preserved; newly introduced sticker SKUs start at zero on upgrade.
+Fixture credentials exist only in test source and the separate fixture database. Runtime data, test databases and secrets are excluded from source delivery.

@@ -1,32 +1,37 @@
-# PrintFlow agent guide
+# PrintFlow contributor index
 
-## Project overview
-Thai independent ERP prototype for folding carton and sheet sticker printing. Static HTML/CSS/JavaScript with browser-local fixture data; it has no central business database or external business integration.
+## Overview
+Independent Thai ERP for cartons and sheet stickers. GitHub Pages serves the browser-local demo; Node.js serves the same frontend with a shared SQLite database on loopback for a local pilot.
 
-## Project structure and entry points
-| Feature | Entry |
+## Structure / entry points from repository root
+| Area | Entry |
 |---|---|
-| Shell and navigation | docs/index.html, docs/app.js |
-| Pricing, materials and transitions | docs/core.js |
-| Components and responsive layout | docs/style.css |
-| Business checks | tests/core.test.cjs |
-| Publication configuration | GitHub Pages: main /docs |
+| Navigation, quotes, jobs and materials | docs/app.js |
+| Pricing and material rules | docs/core.js, docs/production-core.js |
+| Tools, files, approvals, routing, QC and costs | docs/workshop.js |
+| Customers, suppliers, machines, BOM and support registries | docs/masters.js |
+| Connected login and users | docs/backend-client.js |
+| Central authorization and transactional validation | server/server.cjs |
+| Interface styles | docs/style.css |
+| Business/API checks | tests/ |
 
 ## Baseline setup
-Node.js 18+ for tooling. No package install or compilation. Serve docs/ through any local HTTP static server. Run `node --test tests/core.test.cjs` and `node --check docs/app.js` after behavior changes.
+Node.js 24.14+; tested 24.19.0. No dependencies to install. Run `node server/server.cjs` for http://127.0.0.1:8787. Run `node --test tests/*.test.cjs` after behavior changes. Pages source is main /docs; the local server overrides runtime-config.js.
 
-## Top-level principles
-- Keep Thai UI and carton-specific specifications. <!-- user-specified -->
-- Use the authoring skill sources in SOURCES.md as development tools; the ERP architecture is independent of every other business system. <!-- user-specified -->
-- Use fixtures only until a separately verified business integration exists. Preserve units: pieces for product, sheets for paper, THB for price.
-- Browser-local data is a prototype tradeoff, never multi-user inventory authority. Production authorization belongs on the server.
-- Separate reservation from consumption. Refuse negative stock, repeated receipt and unapproved production starts.
-- Keep credentials outside source, archives and logs. Preserve the GitHub repository identity and Pages source when publishing.
-- Verify the calculator and inventory invariants with the focused tests. Use semantic labels, keyboard focus and Thai messages explaining corrective action.
+## Principles
+- PrintFlow is independent of other business systems. <!-- user-specified -->
+- Support cartons and sheet stickers. Roll material requires a separate model. <!-- user-specified -->
+- Apply the four authoring skills in SOURCES.md to current implementation evidence. <!-- user-specified -->
+- Authorize writes on the server; UI visibility is not a permission boundary.
+- Preserve sheets, pieces/labels and hours as distinct units. Keep quote snapshots and approved revisions.
+- Test stock reservations, once-only consumption/receipts, stale versions and rollback.
+- Keep data/, passwords, sessions and fixture databases out of commits and deliverable archives.
+- The first real admin chooses their own password. Never reuse fixture credentials for live users.
 
-## Reference index
-- [PRD.md](PRD.md): scope, acceptance and handoff contract; read before changing behavior.
-- [ARCHITECTURE.md](ARCHITECTURE.md): actual prototype boundaries and proposed independent ERP; read before integration changes.
-- [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md): tokens and component states; read before UI changes.
-- [SOURCES.md](SOURCES.md): primary research and pinned skill sources; read when updating assumptions.
-- [AGENTS_OPEN_QUESTIONS.md](AGENTS_OPEN_QUESTIONS.md): unresolved business decisions; read before production planning.
+## References
+- [PRD.md](PRD.md): scope and acceptance; read before behavior changes.
+- [ARCHITECTURE.md](ARCHITECTURE.md): actual data boundaries; read before backend changes.
+- [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md): components/states; read before UI changes.
+- [SOURCES.md](SOURCES.md): research and skill provenance; read when changing assumptions.
+- [VERIFICATION.md](VERIFICATION.md): release evidence; read before publication.
+- [AGENTS_OPEN_QUESTIONS.md](AGENTS_OPEN_QUESTIONS.md): pilot decisions; read before business deployment.

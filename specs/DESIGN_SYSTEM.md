@@ -1,7 +1,7 @@
-# PrintFlow design system / v1.0
+# PrintFlow design system / v2.0
 
 ## 1. Overview
-Thai operational workspace for reviewing carton and sheet sticker jobs and paper availability. The main screen prioritizes due dates, missing approvals and low materials. [PRD.md](PRD.md) defines scope and [ARCHITECTURE.md](ARCHITECTURE.md) defines data boundaries. This document records the current prototype rather than unimplemented components.
+Thai operational workspace for reviewing carton and sheet sticker jobs and paper availability. The main screen prioritizes due dates, missing approvals and low materials. [PRD.md](PRD.md) defines scope and [ARCHITECTURE.md](ARCHITECTURE.md) defines data boundaries. This document records the current pilot rather than unimplemented components.
 
 ## 2. When to use / when not to use
 Use cards for a job stage and summary indicators; use tables for stock and comparable cost amounts. Use the board for process status. For machine start/end times use a future capacity schedule rather than presenting this board as a scheduling optimizer. Informative badges do not replace buttons or permissions.
@@ -31,15 +31,15 @@ Primary button: teal for a commit or next action. Ghost button: white bordered f
 | Input | Default, focus, HTML validation invalid |
 | Calculator | Valid computed summary, invalid explanatory message |
 | Jobs | Preparation, printing, finishing, die/glue, QC/ship, delivered |
-| Readiness | Unchecked or manually confirmed |
+| Readiness | Missing proof, approved current revision, outdated revision |
 | Material | Available or below reorder threshold |
-| Cost | Missing actual, entered actual, over/under estimate |
+| Cost | Missing actual, seven itemized quantity/rate categories, over/under estimate |
 | Import | Selected, invalid rejected, preview and replacement confirmation |
 | Persistence | Ready, write failure with rollback, corrupt prior data read-only |
 | Dialog | Open with focus trap / Escape close / closed |
 | Notice | Prototype banner and corrective-action toast |
 
-No network loading state is implemented because business data is local. Future connected pages need explicit loading, empty, error and ready states; a failed API must not show confirmed zero stock.
+Connected mode shows setup/login before business data, pending writes, server errors, and stale-version conflicts with reload. Failed writes roll back. File controls show local or server storage. QC records show check results and inspected/good/rejected counts; failed QC blocks delivery. Demo mode remains local. A failed API must not show confirmed zero stock.
 
 ## 6. Design tokens used
 | Token | Value | Role |
@@ -66,4 +66,4 @@ Thai document lang, explicit label/input association, nav aria-current and toast
 Job detail shares states with board cards; calculator summary shares monetary formatting with cost tables; inventory table shares available-stock calculations with reservation actions. [AGENTS.md](AGENTS.md) lists entry points; [SOURCES.md](SOURCES.md) records the design-system-doc skill provenance.
 
 ## 10. Changelog
-v1.0 / 2026-10-14 / Codex: Thai packaging workspace, prototype banner, calculator, job stages, material table, cost comparison and keyboard/touch rules.
+v2.0 / 2026-10-14 / Codex: Thai packaging workspace, prototype banner, calculator, job stages, material table, cost comparison and keyboard/touch rules.

@@ -25,6 +25,9 @@ The four directories are absent from this machine's current global skill install
 | [software-architecture-analysis](https://github.com/magnus919/agent-skills/blob/c545c2b61d4d1e22377bd5db240843a25c1b5764/software-architecture-analysis/SKILL.md) | Observed/proposed/unknown evidence classification for the independent ERP prototype; full codebase reverse engineering is outside scope |
 | [design-system-doc](https://github.com/qa-aman/claude-skills/blob/72ef27fe4fe791363be7c811a16c25ffaa6ea9c0/skills/by-role/designer/design-system-doc/SKILL.md) | Component anatomy, current tokens, states, examples and accessibility limits |
 
-Additional skill references read: deliver-prd references/TEMPLATE.md; agents-md-creator references/writing-framework.md and scripts/estimate_tokens.py. Architecture analysis is scoped to the prototype evidence and independent future data boundaries. Authoring skills do not imply a business-system dependency.
+Additional skill references read: deliver-prd references/TEMPLATE.md; agents-md-creator references/writing-framework.md and scripts/estimate_tokens.py. Architecture analysis is scoped to the current frontend, local API and SQLite evidence and their independent data boundaries. Authoring skills do not imply a business-system dependency.
 
 The built-in Sites skill was applied to private site creation, source packaging and publication. No third-party runtime code from these skill repositories is included in the website.
+
+## Runtime primary source
+[Node.js v24 SQLite API](https://nodejs.org/docs/latest-v24.x/api/sqlite.html) — built-in DatabaseSync, transactions and SQLite backup mechanisms. Runtime verified locally with Node 24.19.0.

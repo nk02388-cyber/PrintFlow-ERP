@@ -1,125 +1,72 @@
-# PRD: PrintFlow — ERP โรงพิมพ์กล่อง บรรจุภัณฑ์ และสติ๊กเกอร์แบบแผ่น
+# PRD: PrintFlow independent print-shop ERP / v0.2
 
-Version 1.0 / 14 ตุลาคม 2569 / สถานะ: ต้นแบบและข้อเสนอสำหรับระบบจริง
+14 October 2026 / Local pilot implementation; business go-live not approved.
 
 ## Overview
-### Problem statement
-งานกล่องมีสเปกไฟล์และโครงสร้างหลายรุ่น วัสดุและขั้นตอนหลังพิมพ์ต่างกัน หากไม่เชื่อมข้อมูลจะประเมินราคาและติดตามต้นทุนยาก ยังไม่มีข้อมูลผลประกอบการของโรงพิมพ์นี้ จึงถือเป็นปัญหาที่ใช้ตั้งสมมติฐานออกแบบ ไม่ใช่ผลสำรวจบริษัท
-### Solution summary
-ใช้เลขงานเดียวเชื่อมสเปก → ราคา → ใบงาน → วัสดุ → ผลิต → QC → ส่งมอบ → ต้นทุน ออกแบบเริ่มจากกล่องกระดาษพับและสติ๊กเกอร์แบบแผ่นและสติ๊กเกอร์แบบแผ่น โดยแยกต้นแบบที่ทดลองได้จากระบบจริงที่ยังต้องพัฒนา
-### Target users
-บทบาทที่เสนอ: ฝ่ายขาย ประเมินราคา เตรียมพิมพ์ วางแผน ช่างผลิต คลัง QC และผู้บริหาร ต้องยืนยันบทบาทกับโรงพิมพ์ก่อนใช้จริง
+### Problem
+The requested system connects carton and sticker specifications, pricing, approved revisions, production, QC and actual cost. Actual company rates and performance baselines were not supplied; these are requested capabilities, not findings from a company audit.
+### Solution
+Extend PrintFlow and add its own Node.js API and shared SQLite database for testing on this machine. The user cancelled Odoo as the foundation. Authoring skills create no dependency on another business system.
+### Users
+Write roles: admin, sales, planner, warehouse, operator, qc, accountant and viewer. Authenticated roles currently share read access to the business dataset.
 
 ## Goals & Success Metrics
-### Goals
-1. ให้แต่ละใบงานมีสเปก รุ่นแบบ กำหนดส่ง และต้นทุนที่ติดตามย้อนกลับได้
-2. เห็นกระดาษพร้อมใช้หลังหักจอง และป้องกันการเบิกซ้ำ
-3. เปรียบเทียบต้นทุนจริงกับประมาณการก่อนตั้งราคางานซ้ำ
-### Success metrics
-| Metric | Current baseline | Proposed target | Timeline |
+| Goal / metric | Baseline | Target | Checkpoint |
 |---|---|---|---|
-| ใบงานมีรุ่น Artwork/Dieline ที่อนุมัติ | ยังไม่ทราบ | 100% ของใบงานทดลองก่อนเริ่มพิมพ์ | ประเมินใน pilot |
-| เวลาประเมินงานซ้ำ | ยังไม่ทราบ | เก็บ baseline 2 สัปดาห์แล้วตกลงเป้าหมาย | ก่อน pilot |
-| รายการวัสดุยอดติดลบจากการจอง/เบิก | ทดสอบด้วย fixture | 0 กรณีในชุดตรวจรับ | ทุก release |
-| ใบงานปิดต้นทุนได้ | ยังไม่ทราบ | อย่างน้อย 95% ภายใน 3 วันทำการหลังส่งมอบ | เป้าหมายเสนอใน pilot |
-### Non-goals
-ต้นแบบยังไม่ออกใบกำกับภาษี ไม่คำนวณ CAD layout ไม่เชื่อมเครื่อง ไม่ใช้ยอดคลังจริง และไม่รองรับข้อมูลพนักงานหลายบัญชี
+| Invalid stock/proof/QC changes accepted | Fixture testing | Zero accepted in defined regression cases | Every release |
+| Shared quote/job persistence | No previous backend | Retained through login/reload in walkthrough | Local pilot |
+| Estimate turnaround | Unknown | Measure before choosing target | Business pilot |
+| Jobs closed with actual cost | Unknown | Proposed >=95% within 3 working days | Business pilot |
+
+Non-goals: Odoo foundation, roll calculations, automated CAD/preflight, tax filing or optimized machine scheduling. Local testing is not production certification.
 
 ## User Stories
-| ID | User story | Priority |
-|---|---|---|
-| US-1 | ฝ่ายขายรับสเปกและสร้างใบเสนอราคาเพื่อส่งต่อข้อมูลผลิต | P0 |
-| US-2 | ฝ่ายผลิตตรวจความพร้อมก่อนเริ่มงาน | P0 |
-| US-3 | คลังจองและเบิกแผ่นกระดาษโดยไม่ทำให้ยอดติดลบ | P0 |
-| US-4 | ผู้บริหารเห็นงานเลยกำหนดและส่วนต่างต้นทุน | P1 |
-| US-5 | ผู้ดูแลสำรองข้อมูลพื้นที่ทดลองเพื่อนำกลับมาดู | P1 |
+Sales estimates and accepts quotes; planners manage tools/revisions and approval evidence; operators use consolidated job sheets; QC records counts and results; accountants compare actual category costs; admins manage pilot accounts. These stories are P0 except additional support registries (P1).
 
 ## Scope
-### In scope / implemented prototype
-ประเมินราคา ใบเสนอราคา เปิดใบงาน บอร์ดสถานะ ตรวจความพร้อมด้วยคน จองและเบิกกระดาษตามประมาณ คำสั่งซื้อและรับเต็มจำนวน ต้นทุนจริงรวม สำรอง JSON นำเข้าด้วยการยืนยัน และ CSV
-### Out of scope
-บัญชีและภาษีจริง วางแผนเครื่องตามกำลังผลิต ไฟล์แนบและอนุมัติออนไลน์ ใบส่งของ การเบิก/คืนบางส่วน ล็อต/ตำแหน่ง บาร์โค้ด และการเชื่อมเครื่องจักร
-### Future considerations
-เพิ่มฐานข้อมูลกลางและบทบาทก่อนการใช้ร่วมกัน เพิ่ม ledger วัสดุจริงและการปิดต้นทุนระดับรายการ แล้วเพิ่มคิวเครื่อง QC และบัญชีตามลำดับ
+Implemented: five specialist features below, customer/CRM and supplier registries, machines, BOM planning, subcontract/maintenance tracking, accepted-quote sales-order records. Local server includes cookie sessions, CSRF/write roles, version checks, idempotency, transaction validation, audit and file BLOB storage.
+
+Boundaries: BOM is planning information, not automatic consumption. Subcontract tracking does not perform stock transfers. Actual sheet use updates stock; auxiliary ink/glue/foil amounts are costing entries without separate inventory ledgers. Seven cost categories aggregate time and rates. Routing does not detect machine conflicts. QC requires inspection quantities equal to the job quantity, with no sampling/partial-delivery policy. Password recovery and granular financial read permissions remain future work.
 
 ## Solution Design
-### Functional requirements
-| ID | Requirement | Status |
+| ID | Requirement | Verification / verifier |
 |---|---|---|
-| FR-1 | รับลูกค้า ชื่องาน โครงสร้าง ประเภทกล่อง/สติ๊กเกอร์ ขนาดสำเร็จ ขนาดกางหรือระยะเผื่อ วัสดุ สี จำนวนชิ้นต่อแผ่น แม่พิมพ์ และรุ่นไฟล์ | Implemented |
-| FR-2 | คำนวณแผ่นสุทธิ เผื่อเสีย ตั้งเครื่อง ต้นทุนและราคาจาก gross margin ที่ต่ำกว่า 100% | Implemented |
-| FR-3 | ตอบรับใบเสนอราคาแล้วเปิดใบงานได้ครั้งเดียว | Implemented |
-| FR-4 | จองโดยไม่เปลี่ยน stock และปฏิเสธจำนวนเกินพร้อมใช้ | Implemented |
-| FR-5 | เริ่มพิมพ์ได้เมื่อยืนยันแบบ/ตรวจไฟล์/แม่พิมพ์และจองครบ จากนั้นหัก stock ครั้งเดียว | Implemented |
-| FR-6 | เคลื่อนขั้นตอนตามลำดับและยืนยัน QC ก่อนส่งมอบ | Implemented as manual confirmation |
-| FR-7 | รับ PO เต็มจำนวนได้ครั้งเดียวและเพิ่ม stock | Implemented |
-| FR-8 | แสดงต้นทุนจริงที่ยังไม่บันทึกเป็น missing และส่วนต่างเมื่อบันทึก | Implemented |
-| FR-9 | สำรอง JSON / ตรวจไฟล์นำเข้า / ให้ยืนยันก่อนแทนที่ / CSV ป้องกันสูตร | Implemented |
-| FR-10 | ระบบจริงต้องมี server authorization, atomic inventory ledger, version checks และ idempotency | Proposed |
-### User experience
-Dashboard เน้นกำหนดส่งและปัญหาที่ต้องจัดการ ฟอร์มราคามีสรุปที่ปรับตามข้อมูล ใบงานแสดงสถานะและความพร้อมชัดเจน ทุกหน้าระบุว่าข้อมูลเป็นตัวอย่าง
-### Edge cases
-| Scenario | Expected behavior |
+| FR-1 | Size/Ups/spoilage/setup, plates, special inks, tools and finishing in gross-margin estimate | Fixture calculator tests + browser / automated and QA |
+| FR-2 | Tool code, type, owner, dimensions, status and reference cost | Form save and server validation / QA |
+| FR-3 | Revision uploads and approval evidence; block mismatched revision or unavailable tool at start | Domain tests + upload/start walkthrough / automated and QA |
+| FR-4 | Job routing with machine/actor, planned hours and due date; export consolidated printable job | Form + HTML download / QA |
+| FR-5 | Four QC checks and full good/reject counts; no delivery until all pass and zero reject | Domain tests + browser gate / automated and QA |
+| FR-6 | Seven actual-cost categories and actual-sheet issue/return; compare estimate and sale price | Domain tests + browser write / automated and QA |
+| FR-7 | Sessions, CSRF, role writes; reject forged stock/files and stale writes | API test / automated |
+| FR-8 | Duplicate request result and transaction rollback | API test / automated |
+| FR-9 | Core registries with explicit planning/tracking limits | Forms and scope text / QA |
+
+UX: Thai mode banners distinguish browser-local demo and central mode. API failure never falls back to a claimed successful local write. Current revision, approval and QC status are visible in job details. Dialog messages explain corrective actions.
+
+| Edge case | Behavior |
 |---|---|
-| ต้นทุนติดลบ กำไร 100% หรือจำนวนไม่ถูกต้อง | ปฏิเสธการคำนวณ/บันทึก |
-| stock ไม่พอหรือจองซ้ำ | แจ้งเหตุและให้รับวัสดุก่อน |
-| แบบยังไม่อนุมัติ | ไม่เริ่มพิมพ์ |
-| PO รับแล้ว | ไม่เพิ่ม stock ซ้ำ |
-| localStorage เขียนไม่สำเร็จ | คืน state ก่อนแก้และแจ้งไม่สำเร็จ |
-| ข้อมูลเดิมอ่านไม่ได้ | รักษาข้อมูลเดิม ปิดการเขียน แสดงตัวอย่างและให้สำรอง |
-| อีกแท็บแก้ข้อมูล | แจ้งการเปลี่ยน โหลดข้อมูลใหม่; ยังไม่รับประกัน concurrency |
+| Another employee updated first | HTTP 409, reload latest, no silent overwrite |
+| Wrong role or CSRF | HTTP 403, no write |
+| Fake attachment metadata | Reject absent server BLOB |
+| Change revision after start | Reject |
+| Failed/incomplete QC | Preserve failure, hold delivery |
+| Actual material exceeds availability | Reject with rollback |
+| JSON backup lacks browser-local file content | Report missing file on download |
 
 ## Technical Considerations
-### Constraints
-ต้นแบบ static JS + localStorage; ค่าเงินเป็น Number และแสดงสองตำแหน่ง ระบบจริงต้องใช้ decimal และกติกาปัดเศษที่บัญชีรับรอง สูตรใช้ Ups ที่ฝ่าย CAD ยืนยัน ไม่คำนวณทิศเสี้ยนหรือพื้นที่จัดวาง
-### Integration points
-ระบบจริงเป็นระบบอิสระของโรงพิมพ์: ฐานข้อมูลกลางของ ERP ถือใบงานและ inventory ledger ของโรงพิมพ์ API ตรวจสิทธิ์และทำรายการจอง/เบิก/คืนแบบ transaction พร้อม idempotency key. JDF/XJDF ใช้เฉพาะเครื่อง/ซอฟต์แวร์ที่ยืนยันการรองรับ
-### Data requirements
-เริ่มจากลูกค้า SKU กระดาษ UOM เครื่องจักร routing อัตราเครื่อง เผื่อเสีย แม่พิมพ์ และไฟล์รุ่นต่าง ๆ ที่ยืนยันแล้ว ไม่มีการนำเข้าข้อมูลธุรกิจจริงในครั้งนี้
+Node.js 24.19 and built-in SQLite were tested. Records use one versioned JSON snapshot plus users, sessions, request results, audit and file BLOB tables. BEGIN IMMEDIATE commits validated changes atomically. Snapshot contention and database/file growth require measurement before scaling; normalized entities are future work. The server binds 127.0.0.1 and validates local Host/Origin. No external account credentials are required.
 
 ## Agent Execution Contract
-### Authoritative sources
-คำสั่งผู้ใช้ล่าสุดเป็นตัวกำหนดงาน โค้ดและ tests เป็นหลักฐานต้นแบบ SOURCES.md เป็นข้อมูลอุตสาหกรรม เอกสารสถาปัตยกรรมระบุข้อเท็จจริงของต้นแบบแยกจากข้อเสนอระบบจริง
-### Do not touch
-ข้อมูลจริงหรือระบบอื่นนอกโรงพิมพ์: ไม่อยู่ในขอบเขต ERP นี้ ต้นแบบใช้ fixtures เท่านั้น
-### Requirement verification map
-| Requirements | Verification | Verifier |
-|---|---|---|
-| FR-1, FR-3 | กรอกงาน เปิดใบงาน และลองเปิดซ้ำผ่าน browser | QA |
-| FR-2 | fixture 10,000 ชิ้น / 4 Ups = 2,825 แผ่น / 55,440 บาท / ขาย 73,920 บาท | node test + QA |
-| FR-4, FR-5 | over-reservation, proof gate และ debit once | node test |
-| FR-6 | QC rejection + flow advancement | node test + QA |
-| FR-7 | receive once | node test + QA |
-| FR-8 | missing cost and comparison | QA |
-| FR-9 | valid/invalid backup, restore confirmation, CSV escaping | node test + QA |
-| FR-10 | สิทธิ์ผู้ใช้ผิดบทบาท simultaneous writes retry/rollback restore drill | ทีม backend และเจ้าของคลัง ก่อน go-live |
-### Stop and escalate
-หาก SKU/หน่วยไม่ตรง ยอดเปิดคลังไม่ reconcile หรือจำเป็นต้องย้ายข้อมูลจริง ให้ติดต่อเจ้าของคลังและผู้ใช้ ห้ามเลือกหน่วยแทนเอง; หากต้องตั้งนโยบายราคา/บัญชี ให้เจ้าของโรงพิมพ์และบัญชียืนยัน
+Authoritative order: latest user instructions; current implementation/tests; PRD/architecture; research. Do not import real records or touch unrelated systems. Never publish data/ or reuse fixture credentials. Every FR above names verification. Escalate actual-data migration/UOM reinterpretation to the print-shop owner; pricing/accounting policy to owner/accountant; public hosting, TLS and retention to system owner.
 
 ## Dependencies & Risks
-| Dependency / risk | Owner | Mitigation |
-|---|---|---|
-| อัตราเครื่องและวัสดุยังเป็นตัวอย่าง | โรงพิมพ์ | เทียบ 10 งานที่เคยผลิตก่อน pilot |
-| browser data สูญหาย/ไม่ซิงก์ | ผู้ดูแลระบบ | สำรองต้นแบบ; เปลี่ยนเป็น central DB ก่อนใช้จริง |
-| หน่วยและ SKU ข้ามระบบไม่ตรง | เจ้าของคลัง | mapping และ reconciliation report |
-| อนุมัติแบบยังไม่เก็บหลักฐาน | ฝ่ายเตรียมพิมพ์ | เพิ่ม immutable approval revision ก่อน go-live |
-| คิวเครื่อง/การจ้างภายนอกไม่ถูกติดตามละเอียด | วางแผน | เพิ่ม routing และ capacity calendar |
+Actual rates, QC criteria and machine limits: owner validates completed jobs. Loopback is unavailable to other computers: owner decides future deployment. All employee roles read financial data: owner agrees access policy before real records. Backup/restore guarantees are untested: system owner completes restore drill before go-live. Multi-device loading and contention: developer performs pilot/load tests before scaling.
 
 ## Timeline & Milestones
-| Milestone | Exit gate | Target |
-|---|---|---|
-| Discovery | สเปกและ master data ยืนยัน | ยังไม่กำหนด |
-| Prototype | สูตรและการเคลื่อนวัสดุ fixture ผ่าน | ส่งมอบครั้งนี้ |
-| Shared MVP | Auth + central DB + inventory ledger ผ่านทดสอบ | หลัง Discovery |
-| Pilot | งานจริงเทียบระบบเดิมและกู้คืนสำรองได้ | หลัง Shared MVP |
-| Go-live | เจ้าของงานรับรองราคา stock QC และบัญชี | หลัง Pilot |
-
-## Sticker scope
-รองรับสติ๊กเกอร์แบบแผ่น: กระดาษกาว/PP ขนาดดวง Cutline Ups เคลือบและ Kiss-cut งานม้วนยังไม่อยู่ในสูตร ต้องเพิ่มหน้ากว้าง ความยาว Repeat แกนและทิศคลายม้วน
+Local code and fixture checks: this delivery. First real admin: user-controlled setup. Business pilot: reconcile inventory and confirm rates/QC. Office/public deployment and go-live dates: pending owner decisions.
 
 ## Open Questions
-ดู [AGENTS_OPEN_QUESTIONS.md](AGENTS_OPEN_QUESTIONS.md) สำหรับคำถามที่ต้องตอบก่อนระบบจริง
+[AGENTS_OPEN_QUESTIONS.md](AGENTS_OPEN_QUESTIONS.md). Prices and QC gates are deterministic; no AI model produces app calculations.
 
 ## Appendix
-เอกสารประกอบ: [ARCHITECTURE.md](ARCHITECTURE.md), [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [SOURCES.md](SOURCES.md), [AGENTS.md](AGENTS.md)
-Revision 1.0 / 14 ต.ค. 2569 / Codex / ต้นแบบและสเปกเริ่มต้น ไม่มีการใช้โมเดล AI เป็นส่วนของการคำนวณในแอป
+[Architecture](ARCHITECTURE.md), [design system](DESIGN_SYSTEM.md), [sources](SOURCES.md), [verification](VERIFICATION.md), [agent index](AGENTS.md). Version 0.2 implements the five specialist workflows and local central backend.
